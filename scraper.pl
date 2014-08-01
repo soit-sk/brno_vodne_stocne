@@ -48,13 +48,22 @@ foreach my $tr (@tr) {
 	} (0 .. 3);
 
 	# Save.
-	print "Year: $year\n";
-	$dt->insert({
-		'Rok' => $year,
-		'Celkem' => $celkem,
-		'Vodne' => $vodne,
-		'Stocne' => $stocne,
-	});
+	my $ret_ar = eval {
+		$dt->execute('SELECT COUNT(*) FROM data WHERE Rok = ?',
+			$year);
+	};
+	if ($EVAL_ERROR || ! @{$ret_ar} || ! exists $ret_ar->[0]->{'count(*)'}
+		|| ! defined $ret_ar->[0]->{'count(*)'}
+		|| $ret_ar->[0]->{'count(*)'} == 0) {
+
+		print "Year: $year\n";
+		$dt->insert({
+			'Rok' => $year,
+			'Celkem' => $celkem,
+			'Vodne' => $vodne,
+			'Stocne' => $stocne,
+		});
+	}
 }
 
 # Get root of HTML::TreeBuilder object.
