@@ -44,6 +44,7 @@ foreach my $tr (@tr) {
 	my ($year, $celkem, $vodne, $stocne) = map { 
 		my $value = $td[$_]->as_text;
 		remove_trailing(\$value);
+		$value =~ s/,/\./ms;
 		$value;
 	} (0 .. 3);
 
